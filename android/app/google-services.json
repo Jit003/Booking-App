@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "495279006177",
+    "project_id": "bhadranee-booking",
+    "storage_bucket": "bhadranee-booking.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:495279006177:android:0df62b30f3083f226ff2a0",
+        "android_client_info": {
+          "package_name": "com.example.bhadranee_employee"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAkIf8YvYB2jgxYuksAClJr_hf5agxJOn4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
