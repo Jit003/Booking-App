@@ -4,4 +4,5 @@ class AppRoutes {
   static const String otpScreen = '/otp';
   static const String dashboardScreen = '/dashboard';
   static const String vehicleScreen = '/vehicle';
+  static const String formScreen = '/form';
 }

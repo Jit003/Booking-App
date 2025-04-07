@@ -28,10 +28,10 @@ class OtpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-              const Text(
-                "Enter the code from the SMS we sent to",
+               Text(
+                "Enter the code from the SMS we sent to ${authController.phoneController.text}",
                 textAlign: TextAlign.center,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 14,
                   color: Colors.white,
                 ),

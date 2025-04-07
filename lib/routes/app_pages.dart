@@ -1,4 +1,5 @@
 import 'package:bhadranee_employee/routes/app_routes.dart';
+import 'package:bhadranee_employee/views/booking_form_screen.dart';
 import 'package:bhadranee_employee/views/dashboard_screen.dart';
 import 'package:bhadranee_employee/views/login_screen.dart';
 import 'package:bhadranee_employee/views/otp_screen.dart';
@@ -13,6 +14,7 @@ class AppPages {
     GetPage(
         name: AppRoutes.dashboardScreen, page: () => DashboardScreen()),
     GetPage(name: AppRoutes.otpScreen, page: ()=>OtpScreen()),
-    GetPage(name: AppRoutes.vehicleScreen, page: ()=>VehicleScreen())
+    GetPage(name: AppRoutes.vehicleScreen, page: ()=>VehicleScreen()),
+    GetPage(name: AppRoutes.formScreen, page: ()=>BookingFormScreen())
   ];
 }

@@ -31,14 +31,6 @@ class LoginScreen extends StatelessWidget {
                       'Skip',
                       style: TextStyle(color: Colors.red),
                     )),
-                TextButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.vehicleScreen);
-                    },
-                    child: const Text(
-                      'Vehicle',
-                      style: TextStyle(color: Colors.red),
-                    )),
                 // Logo
                 Container(
                   height: Get.height * 0.2,
