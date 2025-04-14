@@ -8,6 +8,7 @@ Widget customButton({
   double borderRadius = 8.0, // Default border radius
 }) {
   return Container(
+    width: double.infinity,
     decoration: BoxDecoration(
       color: AppColor.btnColor,
       borderRadius: BorderRadius.circular(borderRadius),
@@ -24,16 +25,21 @@ Widget customButton({
       onPressed: onPressed,
       child: isLoading
           ? const SizedBox(
-        width: 24, height: 24,
-        child: CircularProgressIndicator( // ✅ Show loading indicator
-          color: Colors.white,
-          strokeWidth: 2,
-        ),
-      )
+              width: 24,
+              height: 24,
+              child: CircularProgressIndicator(
+                // ✅ Show loading indicator
+                color: Colors.white,
+                strokeWidth: 2,
+              ),
+            )
           : Text(
-        text,
-        style: const TextStyle(color: Colors.black, fontSize: 20,fontWeight: FontWeight.bold),
-      ),
+              text,
+              style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold),
+            ),
     ),
   );
 }

@@ -1,0 +1,33 @@
+   // Logo
+                Container(
+                  height: Get.height * 0.2,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    shape: BoxShape.circle,
+                    image: DecorationImage(
+                      image:
+                          AssetImage(AppImages.logo), // Using the defined path
+                    ),
+                  ),
+                ),
+
+   //resend otp
+     Obx(() => Row(
+                       mainAxisAlignment: MainAxisAlignment.center,
+                       children: [
+                         Text(
+                           textAlign: TextAlign.center,
+                             "Didn't receive the OTP \n code ? ${authController.remainingSeconds.value}s",
+                             style: TextStyle(color: Colors.grey)),
+                         TextButton(
+                           onPressed: authController.remainingSeconds.value == 0
+                               ? () => authController.resendOTP()
+                               : null,
+                           child: Text(authController.remainingSeconds.value == 0
+                               ? "Resend OTP"
+                               : ''),
+                         ),
+                       ],
+                     )),make this text in 2 line with proper like
+   Didn’t receive the OTP
+    Code ?

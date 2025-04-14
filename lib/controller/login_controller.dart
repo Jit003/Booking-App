@@ -13,6 +13,7 @@ class AuthController extends GetxController {
   var isLoading = false.obs;
   int? resendToken; // ✅ Store resend token
   var remainingSeconds = 60.obs; // Countdown Timer
+  var enteredPhoneNumber = ''.obs; // 📱 Global reactive variable
   TextEditingController phoneController = TextEditingController();
 
   Timer? _timer;
@@ -29,15 +30,30 @@ class AuthController extends GetxController {
     });
   }
 
+  void printCurrentToken() async {
+    try {
+      User? user = _auth.currentUser;
+      if (user == null) {
+        print("❌ No user is currently signed in.");
+        return;
+      }
+
+      String? token = await user.getIdToken(true); // force refresh
+      print("🔑 Firebase ID Token (from onInit): $token");
+    } catch (e) {
+      print("❌ Failed to get token in onInit: $e");
+    }
+  }
 
   void sendOTP() async {
-    String phoneNumber = phoneController.text.trim(); // ✅ Get number from controller
+    String phoneNumber =
+        phoneController.text.trim(); // ✅ Get number from controller
 
     // ✅ Ensure +91 is included
     if (!phoneNumber.startsWith("+91")) {
       phoneNumber = "+91$phoneNumber";
     }
-
+    enteredPhoneNumber.value = phoneNumber;
 
     try {
       isLoading(true);
@@ -46,32 +62,47 @@ class AuthController extends GetxController {
         timeout: const Duration(seconds: 60),
         verificationCompleted: (PhoneAuthCredential credential) async {
           try {
-            // Auto-sign-in on some devices
-            UserCredential userCredential = await _auth.signInWithCredential(credential);
+            await _auth.signInWithCredential(credential);
 
-            String? verifiedNumber = userCredential.user?.phoneNumber;
-            if (verifiedNumber != null) {
-              bool isSaved = await ApiService().savePhoneNumber(verifiedNumber);
-              if (isSaved) {
-                Get.snackbar(backgroundColor: Colors.white,'Phone number','Saved');
-                print('✅ Phone number saved to database');
-              } else {
-                Get.snackbar(backgroundColor: Colors.white,'Phone number','Not Saved');
-                print('❌ Error saving phone number');
-              }
+            bool isSaved = await ApiService().savePhoneNumber(phoneNumber);
+            if (isSaved) {
+              Get.snackbar(
+                  backgroundColor: Colors.white, 'Phone number', 'Saved');
+              print('✅ Phone number saved to database');
+            } else {
+              Get.snackbar(
+                  backgroundColor: Colors.white, 'Phone number', 'Not Saved');
+              print('❌ Error saving phone number');
             }
 
-            Get.snackbar(backgroundColor: Colors.white,"Success", "Phone verified automatically");
+            Get.snackbar(
+                backgroundColor: Colors.white,
+                "Success",
+                "Phone verified automatically");
             Get.toNamed(AppRoutes.dashboardScreen); // Navigate to home screen
           } catch (e) {
             print("Error during automatic sign-in: $e");
-            Get.snackbar(backgroundColor: Colors.white,"Error", "Something went wrong during auto sign-in.");
+            Get.snackbar(
+                backgroundColor: Colors.white,
+                "Error",
+                "Something went wrong during auto sign-in.");
+            bool isSaved =
+                await ApiService().savePhoneNumber(enteredPhoneNumber.value);
+            if (isSaved) {
+              Get.snackbar(
+                  backgroundColor: Colors.white, 'Phone number', 'Saved');
+              print('✅ Phone number saved to database');
+            } else {
+              Get.snackbar(
+                  backgroundColor: Colors.white, 'Phone number', 'Not Saved');
+              print('❌ Error saving phone number');
+            }
           } finally {
             isLoading(false);
           }
         },
         verificationFailed: (FirebaseAuthException e) {
-          Get.snackbar(backgroundColor: Colors.white,"Error", e.message!);
+          Get.snackbar(backgroundColor: Colors.white, "Error", e.message!);
           print(e.toString());
           isLoading(false);
         },
@@ -88,7 +119,7 @@ class AuthController extends GetxController {
         forceResendingToken: resendToken,
       );
     } catch (e) {
-      Get.snackbar(backgroundColor: Colors.white,"Error", e.toString());
+      Get.snackbar(backgroundColor: Colors.white, "Error", e.toString());
       isLoading(false);
     }
   }
@@ -102,10 +133,24 @@ class AuthController extends GetxController {
         smsCode: otp,
       );
       await _auth.signInWithCredential(credential);
-      Get.snackbar(backgroundColor: Colors.white,"Success", "Phone verified successfully");
+      printCurrentToken();
+      bool isSaved =
+          await ApiService().savePhoneNumber(enteredPhoneNumber.value);
+      if (isSaved) {
+        Get.snackbar(backgroundColor: Colors.white, 'Phone number', 'Saved');
+        print('✅ Phone number saved to database');
+      } else {
+        Get.snackbar(
+            backgroundColor: Colors.white, 'Phone number', 'Not Saved');
+        print('❌ Error saving phone number');
+      }
+      Get.snackbar(
+          backgroundColor: Colors.white,
+          "Success",
+          "Phone verified successfully");
       Get.toNamed(AppRoutes.dashboardScreen); // Navigate to home after login
     } catch (e) {
-      Get.snackbar(backgroundColor: Colors.white,"Error", "Invalid OTP");
+      Get.snackbar(backgroundColor: Colors.white, "Error", "Invalid OTP");
     } finally {
       isLoading(false);
     }
@@ -114,6 +159,28 @@ class AuthController extends GetxController {
   void resendOTP() {
     if (remainingSeconds.value == 0) {
       sendOTP();
+    }
+  }
+
+  Future<void> signOutUser() async {
+    try {
+      await FirebaseAuth.instance.signOut();
+      Get.snackbar(
+        'Signed Out',
+        'You can now enter a new phone number',
+        backgroundColor: Colors.blueAccent,
+        colorText: Colors.white,
+      );
+      Get.offAllNamed(
+          AppRoutes.loginScreen); // Navigate to login/phone input screen
+    } catch (e) {
+      print('❌ Sign out failed: $e');
+      Get.snackbar(
+        'Error',
+        'Failed to sign out',
+        backgroundColor: Colors.redAccent,
+        colorText: Colors.white,
+      );
     }
   }
 }

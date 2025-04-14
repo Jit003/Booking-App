@@ -1,5 +1,6 @@
 import 'package:bhadranee_employee/controller/login_controller.dart';
 import 'package:bhadranee_employee/widgets/customButton.dart';
+import 'package:bhadranee_employee/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constant/app_color.dart';
@@ -14,6 +15,7 @@ class LoginScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BhadraneeAppBar(),
       backgroundColor: AppColor.bgColor, // Dark Blue Background
       body: Center(
         child: Padding(
@@ -31,27 +33,27 @@ class LoginScreen extends StatelessWidget {
                       'Skip',
                       style: TextStyle(color: Colors.red),
                     )),
-                // Logo
-                Container(
-                  height: Get.height * 0.2,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    shape: BoxShape.circle,
-                    image: DecorationImage(
-                      image:
-                          AssetImage(AppImages.logo), // Using the defined path
-                    ),
-                  ),
-                ),
 
                 const SizedBox(height: 20),
 
                 // Welcome Text
                 const Text(
-                  "Sign In",
+                  "Enter your mobile number to create account",
+                  textAlign: TextAlign.center,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                const SizedBox(height: 20),
+                // Welcome Text
+                const Text(
+                  "We will send your one time\n Password (OTP)",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(
+                    fontSize: 15,
+                    fontWeight: FontWeight.normal,
                     color: Colors.white,
                   ),
                 ),
@@ -86,7 +88,7 @@ class LoginScreen extends StatelessWidget {
 
                 // Login Button
                 Obx(() => customButton(
-                      text: 'Submit',
+                      text: 'Send',
                       isLoading: authController.isLoading.value,
                       onPressed: authController.isLoading.value
                           ? null // ✅ Explicitly return `null` when loading

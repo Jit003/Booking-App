@@ -18,10 +18,15 @@ class CalendarWidget extends StatelessWidget {
         CalendarFormat.month: 'Month',
       },
       onDaySelected: (selectedDay, focusedDay) {
-        String formattedDate = "${selectedDay.day}-${selectedDay.month}-${selectedDay.year}";
+        String formattedDate =
+            "${selectedDay.day}/${selectedDay.month}/${selectedDay.year}";
         bookingController.checkAvailability(formattedDate);
       },
       calendarStyle: const CalendarStyle(
+        defaultTextStyle: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
+        weekendTextStyle: TextStyle(
+            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 20),
         todayDecoration: BoxDecoration(
           color: Colors.blueAccent,
           shape: BoxShape.circle,
@@ -37,8 +42,30 @@ class CalendarWidget extends StatelessWidget {
       ),
       eventLoader: (day) {
         String formattedDate = "${day.day}-${day.month}-${day.year}";
-        return bookingController.bookedDates.containsKey(formattedDate) ? [1] : [];
+        return bookingController.bookedDates.containsKey(formattedDate)
+            ? [1]
+            : [];
       },
+      headerStyle: const HeaderStyle(
+        titleTextStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+          fontSize: 16,
+        ),
+        formatButtonVisible: false,
+        leftChevronIcon: Icon(Icons.chevron_left, color: Colors.white),
+        rightChevronIcon: Icon(Icons.chevron_right, color: Colors.white),
+      ),
+      daysOfWeekStyle: const DaysOfWeekStyle(
+        weekdayStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+        weekendStyle: TextStyle(
+          color: Colors.white,
+          fontWeight: FontWeight.bold,
+        ),
+      ),
     );
   }
 }

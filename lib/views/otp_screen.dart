@@ -1,4 +1,5 @@
 import 'package:bhadranee_employee/widgets/customButton.dart';
+import 'package:bhadranee_employee/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pinput/pinput.dart';
@@ -12,6 +13,7 @@ class OtpScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: BhadraneeAppBar(),
       backgroundColor: AppColor.bgColor, // Dark blue background
       body: SafeArea(
         child: Padding(
@@ -20,7 +22,7 @@ class OtpScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               const Text(
-                "OTP Verification",
+                "Enter Verification Code",
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -28,10 +30,10 @@ class OtpScreen extends StatelessWidget {
                 ),
               ),
               const SizedBox(height: 10),
-               Text(
-                "Enter the code from the SMS we sent to ${authController.phoneController.text}",
+              const Text(
+                "Your Verification Code has been \n sent to your phone number",
                 textAlign: TextAlign.center,
-                style: const TextStyle(
+                style: TextStyle(
                   fontSize: 14,
                   color: Colors.white,
                 ),
@@ -45,31 +47,40 @@ class OtpScreen extends StatelessWidget {
                 defaultPinTheme: PinTheme(
                   width: 50,
                   height: 50,
-                  textStyle: const TextStyle(fontSize: 20, color: Colors.black),
+                  textStyle: const TextStyle(
+                      fontSize: 25,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.grey.shade400),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.grey.shade400, width: 5),
+                    ),
                   ),
                 ),
-                focusedPinTheme: PinTheme(
+                focusedPinTheme: const PinTheme(
                   width: 50,
                   height: 50,
-                  textStyle: const TextStyle(fontSize: 20, color: Colors.black),
+                  textStyle: TextStyle(
+                      fontSize: 25,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.blue),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.blue, width: 5),
+                    ),
                   ),
                 ),
-                submittedPinTheme: PinTheme(
+                submittedPinTheme: const PinTheme(
                   width: 50,
                   height: 50,
-                  textStyle: const TextStyle(fontSize: 20, color: Colors.black),
+                  textStyle: TextStyle(
+                      fontSize: 25,
+                      color: Colors.green,
+                      fontWeight: FontWeight.bold),
                   decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(10),
-                    border: Border.all(color: Colors.green),
+                    border: Border(
+                      bottom: BorderSide(color: Colors.blue, width: 5),
+                    ),
                   ),
                 ),
                 onChanged: (value) {
@@ -80,25 +91,7 @@ class OtpScreen extends StatelessWidget {
                 },
               ),
 
-              const SizedBox(height: 20),
-              Obx(() => Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                          "Resend OTP in ${authController.remainingSeconds.value}s",
-                          style: TextStyle(color: Colors.grey)),
-                      TextButton(
-                        onPressed: authController.remainingSeconds.value == 0
-                            ? () => authController.resendOTP()
-                            : null,
-                        child: Text(
-                         authController.remainingSeconds.value == 0 ?
-                         "Resend OTP":''
-                        ),
-                      ),
-                    ],
-                  )),
-
+              const SizedBox(height: 40),
               // Verify Button
               Obx(() => customButton(
                   text: 'Verify',
@@ -110,9 +103,47 @@ class OtpScreen extends StatelessWidget {
                           if (otp.length == 6) {
                             authController.verifyOTP(otp);
                           } else {
-                            Get.snackbar(backgroundColor: Colors.white,"Error", "Enter a valid 6-digit OTP");
+                            Get.snackbar(
+                                backgroundColor: Colors.white,
+                                "Error",
+                                "Enter a valid 6-digit OTP");
                           }
-                        }))
+                        })),
+              const SizedBox(height: 20),
+              Obx(() => RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: const TextStyle(
+                          color: Colors.grey, fontSize: 14, letterSpacing: 1),
+                      children: [
+                        const TextSpan(text: "Didn’t receive the OTP\nCode? "),
+                        authController.remainingSeconds.value == 0
+                            ? WidgetSpan(
+                                alignment: PlaceholderAlignment.middle,
+                                child: TextButton(
+                                  onPressed: () => authController.resendOTP(),
+                                  style: TextButton.styleFrom(
+                                    padding: EdgeInsets.zero,
+                                    minimumSize: Size(0, 0),
+                                    tapTargetSize:
+                                        MaterialTapTargetSize.shrinkWrap,
+                                  ),
+                                  child: const Text(
+                                    "Resend OTP",
+                                    style: TextStyle(
+                                        color: Colors.green,
+                                        fontWeight: FontWeight.normal,
+                                        letterSpacing: 1),
+                                  ),
+                                ),
+                              )
+                            : TextSpan(
+                                text:
+                                    "${authController.remainingSeconds.value}s",
+                              ),
+                      ],
+                    ),
+                  ))
             ],
           ),
         ),

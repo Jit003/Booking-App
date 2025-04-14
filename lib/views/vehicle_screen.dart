@@ -1,5 +1,4 @@
 import 'package:bhadranee_employee/constant/app_color.dart';
-import 'package:bhadranee_employee/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/vehicle_list_controller.dart';

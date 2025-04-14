@@ -1,4 +1,3 @@
-import 'package:bhadranee_employee/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -16,8 +15,7 @@ class AvailabilityInfo extends StatelessWidget {
           child: Container(
             height: Get.height * 0.3,
             width: Get.width * 1,
-            decoration: BoxDecoration(
-                border: Border.all(), borderRadius: BorderRadius.circular(5)),
+            decoration: BoxDecoration(borderRadius: BorderRadius.circular(5)),
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(
@@ -25,14 +23,17 @@ class AvailabilityInfo extends StatelessWidget {
                   Text(
                     "Selected Date: ${bookingController.selectedDate.value}",
                     style: const TextStyle(
-                        fontSize: 18, fontWeight: FontWeight.bold),
+                        fontSize: 18,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                   const SizedBox(height: 10),
                   Text(
                     "Status: ${bookingController.selectedStatus.value}",
-                    style: TextStyle(fontSize: 18, color: Colors.blueAccent),
+                    style:
+                        const TextStyle(fontSize: 18, color: Colors.blueAccent),
                   ),
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Obx(() {
                     if (bookingController.selectedStatus.value
                         .contains("Available")) {
@@ -47,7 +48,8 @@ class AvailabilityInfo extends StatelessWidget {
                                     ? "Day"
                                     : "Night",
                               ));
-                        }, text: 'Select Vehicle',
+                        },
+                        text: 'Select Vehicle',
                       );
                     } else {
                       return SizedBox(); // If fully booked, hide the button

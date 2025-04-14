@@ -4,18 +4,25 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'model/booking_date_model.dart';
+import 'package:get_storage/get_storage.dart';
 
 class ApiService {
   static const String url =
       "http://192.168.29.206:8000/api/fetch-booking-dates";
   static const String phnUrl = "http://192.168.29.206:8000/api/firebase-login";
-  static const String vecUrl = "http://192.168.29.206:8000/api/all-vehicle-list";
+  static const String vecUrl =
+      "http://192.168.29.206:8000/api/all-vehicle-list";
+  static const String razUrl =
+      "http://192.168.29.206:8000/api/customer-booking";
+  static const String verifyUrl =
+      "http://192.168.29.206:8000/api/verify-payment";
 
   static Future<DateListModel> fetchBookings() async {
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      debugPrint('print the full data ${response.body}',wrapWidth: 2000); // ✅ Print full response
+      debugPrint('print the full data ${response.body}',
+          wrapWidth: 2000); // ✅ Print full response
       return DateListModel.fromJson(json.decode(response.body));
     } else {
       throw Exception("Failed to load bookings");
@@ -23,6 +30,7 @@ class ApiService {
   }
 
   Future<bool> savePhoneNumber(String number) async {
+    final storage = GetStorage();
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
@@ -37,6 +45,7 @@ class ApiService {
         return false;
       }
       print("🔑 Firebase ID Token: $idToken");
+      await storage.write('token', idToken);
 
       // API Request
       var response = await http.post(
@@ -69,16 +78,90 @@ class ApiService {
     }
   }
 
-  static Future<VehicleListModel> fetchVehicles()async {
+  static Future<VehicleListModel> fetchVehicles() async {
     var response = await http.get(Uri.parse(vecUrl));
-    if(response.statusCode == 200){
+    if (response.statusCode == 200) {
       print('vehicles list ${response.body}');
       return VehicleListModel.fromJson(jsonDecode(response.body));
-    }
-    else{
+    } else {
       throw Exception('Failed to load vehicle list');
     }
   }
 
+  Future<Map<String, dynamic>?> submitCustomerBooking({
+    required String token,
+    required String name,
+    required String email,
+    required String address,
+    required String fullAmount,
+    required String amount,
+    required String vehicleType,
+  }) async {
+    final urlRaz = Uri.parse(razUrl);
+
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json',
+      'Authorization': 'Bearer $token',
+      'Cookie': 'humans_21909=1',
+    };
+
+    final body = jsonEncode({
+      'name': name,
+      'email': email,
+      'address': address,
+      'full_amount': fullAmount,
+      'amount': amount,
+      'vehicle_type': vehicleType,
+    });
+
+    final response = await http.post(urlRaz, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      final data = jsonDecode(response.body);
+      print('✅ Booking & order created: $data');
+      return {
+        'razorpay_order_id':
+            data['razorpay_order_id'], // must be returned by backend
+        'amount': data['amount'],
+        'razorpay_key': data['razorpay_key'], // ✅ match key
+        'currency': data['currency']
+      };
+    } else {
+      print('❌ Booking failed: ${response.statusCode} ${response.body}');
+      return null;
+    }
+  }
+
+  Future<bool> verifyPayment({
+    required String paymentId,
+    required String orderId,
+    required String signature,
+    required Map<String, dynamic> bookingData,
+  }) async {
+    final url = Uri.parse(verifyUrl);
+    final headers = {
+      'Accept': 'application/json',
+      'Content-Type': 'application/json'
+    };
+
+    // Merge Razorpay info + booking data
+    final body = json.encode({
+      "razorpay_payment_id": paymentId,
+      "razorpay_order_id": orderId,
+      "razorpay_signature": signature,
+      ...bookingData, // 👈 merge booking fields
+    });
+
+    final response = await http.post(url, headers: headers, body: body);
+
+    if (response.statusCode == 200) {
+      print("✅ Payment verified & booking saved: ${response.body}");
+      return true;
+    } else {
+      print("❌ Payment verification failed: ${response.body}");
+      return false;
+    }
+  }
 
 }
