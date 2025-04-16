@@ -31,3 +31,38 @@
                      )),make this text in 2 line with proper like
    Didn’t receive the OTP
     Code ?
+
+    //+ icon
+            Positioned(
+              top: -25, // Adjust position as needed
+              left: MediaQuery.of(context).size.width / 2 - 25, // Centers horizontally
+              child: GestureDetector(
+                onTap: () {
+                  // Handle button press
+                },
+                child: Container(
+                  width: 53, // Diameter of the circle
+                  height: 53,
+                  decoration: BoxDecoration(
+                    color: Colors.red, // Background color
+                    shape: BoxShape.circle, // Makes it circular
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.3),
+                        blurRadius: 5,
+                        offset: const Offset(0, 2),
+                      ),
+                    ],
+                    border: Border.all( // Optional: Add a border
+                      color: const Color(0xFF3A3A3A),
+                      width: 5.0,
+                    ),
+                  ),
+                  child: const Icon(
+                    Icons.add,
+                    color: Colors.white,
+                    size: 30,
+                  ),
+                ),
+              ),
+            )

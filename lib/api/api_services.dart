@@ -6,9 +6,12 @@ import 'package:flutter/material.dart';
 import 'model/booking_date_model.dart';
 import 'package:get_storage/get_storage.dart';
 
+import 'model/vehicle_list_category_model.dart';
+
 class ApiService {
+  static const String registerUrl = "http://192.168.29.206:8000/api/register";
   static const String url =
-      "http://192.168.29.206:8000/api/fetch-booking-dates";
+      "http://192.168.29.206:8000/api/eicher-booking-dates";
   static const String phnUrl = "http://192.168.29.206:8000/api/firebase-login";
   static const String vecUrl =
       "http://192.168.29.206:8000/api/all-vehicle-list";
@@ -17,8 +20,68 @@ class ApiService {
   static const String verifyUrl =
       "http://192.168.29.206:8000/api/verify-payment";
 
+  static Future<http.Response?> registerUser({
+    required String name,
+    required String email,
+    required String phoneNumber,
+    required String password,
+  }) async {
+    try {
+      var uri = Uri.parse(registerUrl);
+      var request = http.MultipartRequest('POST', uri);
+
+      request.fields.addAll({
+        'name': name,
+        'email': email,
+        'phone_number': phoneNumber,
+        'password': password,
+      });
+
+      http.StreamedResponse streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      return response;
+    } catch (e) {
+      print('Error: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> loginUser({
+    required String email,
+    required String password,
+  }) async {
+    try {
+      var uri = Uri.parse('http://192.168.29.206:8000/api/customer/login');
+      var request = http.Request('POST', uri);
+      request.headers.addAll({'Content-Type': 'application/json'});
+
+      request.body = json.encode({
+        "email": email,
+        "password": password,
+      });
+
+      http.StreamedResponse streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+      return response;
+    } catch (e) {
+      print('Login API Error: $e');
+      return null;
+    }
+  }
+
   static Future<DateListModel> fetchBookings() async {
-    final response = await http.get(Uri.parse(url));
+    final storage = GetStorage();
+    User? user = FirebaseAuth.instance.currentUser;
+    // Get Firebase ID Token
+    String? idToken = await user?.getIdToken(true);
+    await storage.write('token', idToken);
+    final response = await http.get(Uri.parse(url), headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json", // Important for JSON APIs
+      "cookie": "humans_21909=1",
+      "Authorization": "Bearer $idToken",
+    });
 
     if (response.statusCode == 200) {
       debugPrint('print the full data ${response.body}',
@@ -79,12 +142,51 @@ class ApiService {
   }
 
   static Future<VehicleListModel> fetchVehicles() async {
-    var response = await http.get(Uri.parse(vecUrl));
+    final storage = GetStorage();
+    User? user = FirebaseAuth.instance.currentUser;
+    // Get Firebase ID Token
+    String? idToken = await user?.getIdToken(true);
+    await storage.write('token', idToken);
+    var response = await http.get(Uri.parse(vecUrl), headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json", // Important for JSON APIs
+    "cookie": "humans_21909=1",
+    "Authorization": "Bearer $idToken",
+    });
     if (response.statusCode == 200) {
       print('vehicles list ${response.body}');
       return VehicleListModel.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Failed to load vehicle list');
+    }
+  }
+
+  static Future<VechileListCategory> fetchVehiclesCategories(
+      {String? category}) async {
+    String url = "http://192.168.29.206:8000/api/vehicle-categories";
+    final storage = GetStorage();
+    User? user = FirebaseAuth.instance.currentUser;
+    // Get Firebase ID Token
+    String? idToken = await user?.getIdToken(true);
+    await storage.write('token', idToken);
+
+    // Encode category name properly for URLs like "Barat on wheels"
+    if (category != null && category.isNotEmpty) {
+      url = "$url/${Uri.encodeComponent(category)}";
+    }
+
+    final response = await http.get(Uri.parse(url),headers: {
+    "Accept": "application/json",
+    "Content-Type": "application/json", // Important for JSON APIs
+    "cookie": "humans_21909=1",
+    "Authorization": "Bearer $idToken",
+    });
+
+    if (response.statusCode == 200) {
+      print('the fetched category data is ${response.body}');
+      return VechileListCategory.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception("Failed to load vehicles");
     }
   }
 
@@ -163,5 +265,4 @@ class ApiService {
       return false;
     }
   }
-
 }

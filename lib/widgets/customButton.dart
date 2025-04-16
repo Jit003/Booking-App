@@ -43,3 +43,36 @@ Widget customButton({
     ),
   );
 }
+
+Widget customButtonforCal({
+  required String text,
+  required VoidCallback? onPressed,
+  required bool isSelected, // New parameter to control focus color
+  double borderRadius = 8.0,
+}) {
+  return GestureDetector(
+    onTap: onPressed,
+    child: Container(
+      height: 50,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(borderRadius),
+        border: Border.all(color: Colors.white24),
+        color: isSelected ? AppColor.btnColor : Colors.black,
+      ),
+      child: Center(
+        child: Text(
+          text,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            color: Colors.white,
+            fontSize: 14,
+            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
+          ),
+        ),
+      ),
+    ),
+  );
+}
+
+

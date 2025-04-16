@@ -133,6 +133,10 @@ class AuthController extends GetxController {
         smsCode: otp,
       );
       await _auth.signInWithCredential(credential);
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        print("👤 Firebase UID: ${user.uid}");
+      }
       printCurrentToken();
       bool isSaved =
           await ApiService().savePhoneNumber(enteredPhoneNumber.value);
@@ -148,7 +152,7 @@ class AuthController extends GetxController {
           backgroundColor: Colors.white,
           "Success",
           "Phone verified successfully");
-      Get.toNamed(AppRoutes.dashboardScreen); // Navigate to home after login
+      Get.toNamed(AppRoutes.mainScreen); // Navigate to home after login
     } catch (e) {
       Get.snackbar(backgroundColor: Colors.white, "Error", "Invalid OTP");
     } finally {
@@ -172,7 +176,7 @@ class AuthController extends GetxController {
         colorText: Colors.white,
       );
       Get.offAllNamed(
-          AppRoutes.loginScreen); // Navigate to login/phone input screen
+          AppRoutes.numLoginScreen); // Navigate to login/phone input screen
     } catch (e) {
       print('❌ Sign out failed: $e');
       Get.snackbar(

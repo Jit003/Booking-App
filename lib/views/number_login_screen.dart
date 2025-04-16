@@ -4,12 +4,12 @@ import 'package:bhadranee_employee/widgets/custom_appbar.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../constant/app_color.dart';
-import '../constant/app_images.dart';
 import '../routes/app_routes.dart';
 
-class LoginScreen extends StatelessWidget {
+class NumberLoginScreen extends StatelessWidget {
+
   AuthController authController = Get.put(AuthController());
-  final TextEditingController phoneController = TextEditingController();
+   TextEditingController phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -27,7 +27,7 @@ class LoginScreen extends StatelessWidget {
               children: [
                 TextButton(
                     onPressed: () {
-                      Get.toNamed(AppRoutes.dashboardScreen);
+                      Get.toNamed(AppRoutes.mainScreen);
                     },
                     child: const Text(
                       'Skip',

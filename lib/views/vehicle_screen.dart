@@ -23,7 +23,7 @@ class VehicleScreen extends StatelessWidget {
             style: TextStyle(color: Colors.white),
           )),
       body: Obx(() {
-        if (vehicleController.isLoading.value) {
+        if (vehicleController.isLoadingforCategory.value) {
           return const Center(
               child: CircularProgressIndicator(
             color: Colors.white,
@@ -31,7 +31,7 @@ class VehicleScreen extends StatelessWidget {
           ));
         }
 
-        if (vehicleController.vehicleList.isEmpty) {
+        if (vehicleController.vehicleListforCat.isEmpty) {
           return const Center(
               child: Text(
             "No Vehicles Available",
@@ -40,9 +40,9 @@ class VehicleScreen extends StatelessWidget {
         }
 
         return ListView.builder(
-          itemCount: vehicleController.vehicleList.length,
+          itemCount: vehicleController.vehicleListforCat.length,
           itemBuilder: (context, index) {
-            final vehicle = vehicleController.vehicleList[index];
+            final vehicle = vehicleController.vehicleListforCat[index];
             return Padding(
               padding: const EdgeInsets.all(8.0),
               child: Container(
@@ -53,17 +53,17 @@ class VehicleScreen extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    vehicle.image != null && vehicle.image!.isNotEmpty
-                        ? Padding(
-                            padding: const EdgeInsets.all(5.0),
-                            child: Image.network(
-                              vehicle.image!,
-                              errorBuilder: (context, error, stackTrace) =>
-                                  const Icon(Icons.image_not_supported,
-                                      size: 100),
-                            ),
-                          )
-                        : const Icon(Icons.image, size: 100),
+                    // vehicle.image != null && vehicle.image!.isNotEmpty
+                    //     ? Padding(
+                    //         padding: const EdgeInsets.all(5.0),
+                    //         child: Image.network(
+                    //           vehicle.image!,
+                    //           errorBuilder: (context, error, stackTrace) =>
+                    //               const Icon(Icons.image_not_supported,
+                    //                   size: 100),
+                    //         ),
+                    //       )
+                    //     : const Icon(Icons.image, size: 100),
                     const SizedBox(
                       height: 5,
                     ),
@@ -85,7 +85,7 @@ class VehicleScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.all(5.0),
                       child: Text(
-                        vehicle.name ?? "Unknown Vehicle",
+                        vehicle.category ?? "Unknown Vehicle",
                         style: const TextStyle(
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
@@ -105,7 +105,7 @@ class VehicleScreen extends StatelessWidget {
                           Get.to(() => BookingFormScreen(
                             date: date,
                             availableSlot: availableSlot,
-                            vehicleName: vehicle.name ?? "Unknown Vehicle",
+                            vehicleName: vehicle.description ?? "Unknown Vehicle",
                             vehiclePrice: vehicle.price ?? "No Price",
                           ));
                         },

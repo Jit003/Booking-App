@@ -9,7 +9,7 @@ class AllVehicleWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Obx(() {
-      if (vehicleController.isLoading.value) {
+      if (vehicleController.isLoadingforCategory.value) {
         return const Center(
           child: CircularProgressIndicator(
             color: Colors.white,
@@ -18,7 +18,7 @@ class AllVehicleWidget extends StatelessWidget {
         );
       }
 
-      if (vehicleController.vehicleList.isEmpty) {
+      if (vehicleController.vehicleListforCat.isEmpty) {
         return const Center(
           child: Text(
             "No Vehicles Available",
@@ -31,18 +31,17 @@ class AllVehicleWidget extends StatelessWidget {
         height: 180,
         child: ListView.builder(
           scrollDirection: Axis.horizontal,
-          itemCount: vehicleController.vehicleList.length,
+          itemCount: vehicleController.vehicleListforCat.length,
           itemBuilder: (context, index) {
-            final vehicle = vehicleController.vehicleList[index];
+            final vehicle = vehicleController.vehicleListforCat[index];
             return Container(
               margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 10),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                image:  DecorationImage(
-                  image: AssetImage(AppImages.static), // 🔥 Static Image
-                  fit: BoxFit.cover,
-                  opacity: 0.7
-                ),
+                image: DecorationImage(
+                    image: AssetImage(AppImages.static), // 🔥 Static Image
+                    fit: BoxFit.cover,
+                    opacity: 0.7),
               ),
               child: Container(
                 padding: const EdgeInsets.all(10),
@@ -55,7 +54,7 @@ class AllVehicleWidget extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      vehicle.name ?? "Unknown Vehicle",
+                      vehicle.price ?? "Unknown Vehicle",
                       style: const TextStyle(
                         fontSize: 18,
                         fontWeight: FontWeight.bold,

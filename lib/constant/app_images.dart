@@ -1,5 +1,6 @@
 class AppImages {
   static String logo = 'assets/images/logo.png';
+  static String appBarlogo = 'assets/images/logo2.png';
   static String vehicleImg = 'assets/images/vehicle.gif';
   static String booking = 'assets/images/calendar.png';
   static String payment = 'assets/images/payment.png';
