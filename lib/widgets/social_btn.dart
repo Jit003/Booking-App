@@ -4,17 +4,12 @@ import 'package:get/get.dart';
 
 Widget SocialBtn() {
   return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+    mainAxisAlignment: MainAxisAlignment.center,
     children: [
       _buildSocialBtn(Icons.phone, () {
         Get.toNamed(AppRoutes.numLoginScreen);
-      }),
-      _buildSocialBtn(Icons.email, () {
-        print("Email login tapped");
-      }),
-      _buildSocialBtn(Icons.alternate_email, () {
-        print("Username login tapped");
-      }),
+      }
+     ),
     ],
   );
 }

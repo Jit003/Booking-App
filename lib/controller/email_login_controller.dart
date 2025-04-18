@@ -11,6 +11,8 @@ class EmailLoginController extends GetxController {
   final passwordController = TextEditingController();
   final isLoading = false.obs;
   final box = GetStorage();
+  var isPasswordVisible = false.obs;
+
 
   Future<void> loginUser() async {
     isLoading.value = true;
@@ -25,22 +27,35 @@ class EmailLoginController extends GetxController {
     if (response != null && response.statusCode == 200) {
       final data = jsonDecode(response.body);
 
-      // Save token or user info
-      box.write('token', data['token']);
-      box.write('user_email', emailController.text.trim());
+      final customToken = data['token'];
+      final customer = data['customer'];
+      final name = customer['name'];
+      final phoneNumber = customer['phone_number'];
 
-      Get.snackbar("Login Success", "Welcome back!");
-      Get.toNamed(AppRoutes.mainScreen);
+      // Save token and user info
+      box.write('customToken', customToken);
+      box.write('user_name', name);
+      box.write('user_phone', phoneNumber);
+      box.write('customer_id', customer['customer_id']);
+      print('the custom token is $customToken');
+
+      Get.snackbar(backgroundColor: Colors.white, "Login Success", "Welcome!");
+      Get.offNamed(AppRoutes.mainScreen);
+      print('the login api data is $data');
+      return data;  // Replace 'token' with your actual key
+
     } else {
       final error = jsonDecode(response?.body ?? '{}');
-      Get.snackbar("Login Failed", error['message'] ?? 'Invalid credentials');
+      Get.snackbar(
+          backgroundColor: Colors.white,
+          "Login Failed",
+          error['message'] ?? 'Invalid credentials');
     }
   }
 
-  @override
-  void onClose() {
-    emailController.dispose();
-    passwordController.dispose();
-    super.onClose();
-  }
+
+  // Forgot Password Method
+
+
+
 }

@@ -29,11 +29,19 @@ class RegisterController extends GetxController {
       box.write('user_email', emailController.text.trim());
       box.write('user_password', passwordController.text);
       box.write('user_name', nameController.text.trim());
-      Get.snackbar("Success", "User Registered Successfully");
+      Get.snackbar(backgroundColor: Colors.white,"Success", "User Registered Successfully");
+      nameController.clear();
+      emailController.clear();
+      phoneController.clear();
+      passwordController.clear();
       Get.toNamed(AppRoutes.loginScreen);
       print(response.body);
     } else {
-      Get.snackbar("Error", response?.reasonPhrase ?? "Unknown Error");
+      nameController.clear();
+      emailController.clear();
+      phoneController.clear();
+      passwordController.clear();
+      Get.snackbar(backgroundColor: Colors.white,"Error", response?.reasonPhrase ?? "Unknown Error");
     }
   }
 

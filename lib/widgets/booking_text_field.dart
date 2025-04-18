@@ -13,16 +13,16 @@ Widget buildStyledTextField({
     child: TextField(
       readOnly: readOnly,
       controller: controller,
+      style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: label,
-        labelStyle: const TextStyle(color: Colors.black),
+        labelStyle: const TextStyle(color: Colors.white),
+        hintStyle: const TextStyle(color: Colors.white),
         contentPadding:
             const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
         filled: true,
-        fillColor: const Color(0xFFF1F3F6),
-        border: const OutlineInputBorder(
-          borderSide: BorderSide.none,
-        ),
+        fillColor: Colors.grey[900],
+        border: const OutlineInputBorder(),
       ),
     ),
   );
@@ -40,14 +40,16 @@ Widget buildTimePickerField(String label, bool isStartTime) {
     child: AbsorbPointer(
       child: TextField(
         controller: controllerField,
+        style: const TextStyle(color: Colors.white),
         decoration: InputDecoration(
           hintText: label,
-          suffixIcon: const Icon(Icons.access_time, color: Colors.black),
+          suffixIcon: const Icon(Icons.access_time, color: Colors.white),
           labelStyle: const TextStyle(color: Colors.black),
+          hintStyle: const TextStyle(color: Colors.white),
           contentPadding:
-          const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
+              const EdgeInsets.symmetric(vertical: 15, horizontal: 20),
           filled: true,
-          fillColor: const Color(0xFFF1F3F6),
+          fillColor: Colors.grey[900],
           border: const OutlineInputBorder(
             borderSide: BorderSide.none,
           ),
@@ -56,4 +58,3 @@ Widget buildTimePickerField(String label, bool isStartTime) {
     ),
   );
 }
-

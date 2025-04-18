@@ -1,4 +1,5 @@
 import 'package:bhadranee_employee/constant/app_color.dart';
+import 'package:bhadranee_employee/widgets/customButton.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import '../controller/vehicle_list_controller.dart';
@@ -8,8 +9,9 @@ class VehicleScreen extends StatelessWidget {
   final VehicleController vehicleController = Get.put(VehicleController());
   final date;
   final availableSlot;
+  final vehicleType;
 
-  VehicleScreen({super.key, this.date, this.availableSlot});
+  VehicleScreen({super.key, this.date, this.availableSlot, this.vehicleType});
 
   @override
   Widget build(BuildContext context) {
@@ -18,9 +20,20 @@ class VehicleScreen extends StatelessWidget {
       appBar: AppBar(
           iconTheme: const IconThemeData(color: Colors.white),
           backgroundColor: AppColor.bgColor,
-          title: const Text(
-            "Choose Our Vehicles",
-            style: TextStyle(color: Colors.white),
+          title:  SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: [
+                const Text(
+                  "Choose Your Vehicle",
+                  style: TextStyle(color: Colors.white,fontSize: 20),
+                ),
+                Text(
+                  '($vehicleType)',
+                  style: TextStyle(color: Colors.white,fontSize: 20),
+                ),
+              ],
+            ),
           )),
       body: Obx(() {
         if (vehicleController.isLoadingforCategory.value) {
@@ -100,30 +113,18 @@ class VehicleScreen extends StatelessWidget {
                             height: 1.5, fontSize: 14, color: Colors.white),
                       ),
                     ),
-                    TextButton(
-                        onPressed: () {
-                          Get.to(() => BookingFormScreen(
-                            date: date,
-                            availableSlot: availableSlot,
-                            vehicleName: vehicle.description ?? "Unknown Vehicle",
-                            vehiclePrice: vehicle.price ?? "No Price",
-                          ));
-                        },
-                        child: const Row(
-                          children: [
-                            Text(
-                              'Book Now',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.w900,
-                                  color: Colors.lightBlueAccent),
-                            ),
-                            SizedBox(
-                              width: 2,
-                            ),
-                            Icon(Icons.arrow_forward,
-                                size: 20, color: Colors.lightBlueAccent)
-                          ],
-                        )),
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: customButton(text: 'Book Now', onPressed: (){
+                        Get.to(() => BookingFormScreen(
+                          date: date,
+                          availableSlot: availableSlot,
+                          vehicleName: vehicle.category ?? "Unknown V ehicle",
+                          vehiclePrice: vehicle.price ?? "No Price",
+                          vehicleType: vehicleType,
+                        ));
+                      }),
+                    )
                   ],
                 ),
               ),

@@ -3,7 +3,7 @@ import '../api/api_services.dart';
 import '../api/model/booking_date_model.dart';
 
 
-class BookingController extends GetxController {
+class TataBookingController extends GetxController {
   var bookedDates = <String, List<String>>{}.obs; // Stores booked dates with a list of booked times
   var isLoading = true.obs;
   var selectedDate = "".obs;
@@ -20,7 +20,7 @@ class BookingController extends GetxController {
       isLoading(true);
       print("Fetching bookings from API...");
 
-      DateListModel data = await ApiService.fetchBookings();
+      DateListModel data = await ApiService.fetchBookingsTata();
       print("API Response: ${data.toJson()}");
 
       bookedDates.clear();
@@ -71,5 +71,4 @@ class BookingController extends GetxController {
 
     print("Final Status: ${selectedStatus.value}");
   }
-
 }

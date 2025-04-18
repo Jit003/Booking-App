@@ -13,11 +13,13 @@ class BookingFormScreen extends StatelessWidget {
   final String? availableSlot;
   final String? vehicleName;
   final String? vehiclePrice;
+  final String ? vehicleType;
 
   final BookingFormController controller = Get.put(BookingFormController());
   final PaymentController paymentController = Get.put(PaymentController());
   final AuthController authController = Get.put(AuthController());
   final TimeController timeController = Get.put(TimeController());
+
 
   BookingFormScreen({
     super.key,
@@ -25,6 +27,7 @@ class BookingFormScreen extends StatelessWidget {
     this.availableSlot,
     this.vehicleName,
     this.vehiclePrice,
+    this.vehicleType
   }) {
     controller.initializeBooking(
       vehicleName: vehicleName ?? '',
@@ -33,6 +36,8 @@ class BookingFormScreen extends StatelessWidget {
 
     );if (date != null) {
       controller.setSelectedDate(date!);
+    }if (vehicleType != null) {
+    controller.setVehicleType(vehicleType!);
     }
   }
 
@@ -86,7 +91,7 @@ class BookingFormScreen extends StatelessWidget {
                     buildStyledTextField(
                         label: "Phone Number",
                         controller: authController.phoneController,
-                        readOnly: true),
+                        readOnly: false),
                     buildStyledTextField(
                         label: "Email", controller: controller.emailController),
                     buildStyledTextField(
@@ -108,7 +113,7 @@ class BookingFormScreen extends StatelessWidget {
                       children: [
                         Expanded(
                           child: buildStyledTextField(
-                              label: "Starting Place",
+                              label: "Starting Place ",
                               controller: controller.startPlaceController),
                         ),
                         const SizedBox(width: 12),
@@ -128,7 +133,8 @@ class BookingFormScreen extends StatelessWidget {
               ),
             ),
             const SizedBox(height: 20),
-            customButton(
+            Obx(()=>customButton(
+              isLoading: paymentController.isLoading.value,
               onPressed: () {
                 paymentController.initiatePayment(
                   name: controller.fullNameController.text,
@@ -141,7 +147,7 @@ class BookingFormScreen extends StatelessWidget {
                 );
               },
               text: 'Pay Booking Amount',
-            ),
+            ),)
           ],
         ),
       ),

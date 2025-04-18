@@ -6,6 +6,8 @@ buildscript {
     dependencies {
         // Google services plugin (added to buildscript dependencies)
         classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.android.tools.build:gradle:8.9.1' // ✅ AGP 8.2
+        classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:1.9.23"
     }
 }
 

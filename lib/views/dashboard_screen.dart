@@ -142,7 +142,64 @@ class DashboardScreen extends StatelessWidget {
                 }),
 
                 const SizedBox(height: 20),
-                AvailabilityInfo(),
+                Obx(() {
+                  if (bookingController.isLoading.value) {
+                    return const Center(child: CircularProgressIndicator());
+                  }
+
+                  Widget calendarToShow;
+                  switch (vehicleController.selectedCalendarType.value) {
+                    case 'Tata Setup':
+                      calendarToShow = AvailabilityInfoForTata();
+                      break;
+                    case 'Barat on wheels':
+                      calendarToShow = AvailabilityInfoForBarat();
+                      break;
+                    case 'Eicher':
+                      calendarToShow = AvailabilityInfoForEicher();
+                      break;
+                    default:
+                      calendarToShow = const SizedBox(); // Empty fallback
+                  }
+
+
+                  return AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    switchInCurve: Curves.easeOut,
+                    switchOutCurve: Curves.easeIn,
+                    transitionBuilder: (Widget child, Animation<double> animation) {
+                      final inAnimation = Tween<Offset>(
+                        begin: const Offset(1.0, 0.0),
+                        end: Offset.zero,
+                      ).animate(CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeOut,
+                      ));
+
+                      final fadeAnimation = CurvedAnimation(
+                        parent: animation,
+                        curve: Curves.easeInOut,
+                      );
+
+                      return SlideTransition(
+                        position: inAnimation,
+                        child: FadeTransition(
+                          opacity: fadeAnimation,
+                          child: child,
+                        ),
+                      );
+                    },
+                    child: Container(
+                      key: ValueKey(vehicleController.selectedCalendarType.value),
+                      padding: const EdgeInsets.symmetric(vertical: 8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[900],
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      child: calendarToShow,
+                    ),
+                  );
+                }),
                 // AllVehicleWidget(),
               ],
             ),

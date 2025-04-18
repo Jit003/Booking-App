@@ -16,9 +16,13 @@ class BookingFormController extends GetxController {
 
   // ✅ Add this line
   String selectedDate = '';
+  String selectedVehicleType = '';
 
   void setSelectedDate(String date) {
     selectedDate = date;
+  }
+  void setVehicleType(String VehicleType){
+    selectedVehicleType = VehicleType;
   }
 
   // Call this method to fill data from the previous screen

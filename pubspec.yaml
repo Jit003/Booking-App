@@ -47,6 +47,10 @@ dependencies:
   razorpay_flutter: ^1.4.0
   get_storage: ^2.1.1
   url_launcher: ^6.3.1
+  lottie: ^3.2.0
+  path_provider: ^2.1.5
+  permission_handler: 11.0.1
+  open_file: ^3.5.10
 
 
 dev_dependencies:
@@ -73,7 +77,9 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
+    - assets/
     - assets/images/
+    - assets/animation/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

@@ -7,9 +7,8 @@ import '../constant/app_color.dart';
 import '../routes/app_routes.dart';
 
 class NumberLoginScreen extends StatelessWidget {
-
   AuthController authController = Get.put(AuthController());
-   TextEditingController phoneController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
   final formKey = GlobalKey<FormState>();
 
   @override
@@ -25,15 +24,6 @@ class NumberLoginScreen extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                TextButton(
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.mainScreen);
-                    },
-                    child: const Text(
-                      'Skip',
-                      style: TextStyle(color: Colors.red),
-                    )),
-
                 const SizedBox(height: 20),
 
                 // Welcome Text

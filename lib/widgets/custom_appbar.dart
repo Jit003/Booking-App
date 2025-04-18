@@ -16,15 +16,8 @@ class BhadraneeAppBar extends StatelessWidget implements PreferredSizeWidget {
       centerTitle: false,
       title: Image.asset(
         AppImages.appBarlogo,
+        height: 100,
       ),
-      actions: [
-        IconButton(
-          icon: const Icon(Icons.menu, color: Colors.white, size: 25),
-          onPressed: () {
-            Scaffold.of(context).openEndDrawer();
-          },
-        ),
-      ],
     );
   }
 }

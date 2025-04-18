@@ -1,10 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SetupCard extends StatelessWidget {
   final String title;
   final List<String> plans;
 
   const SetupCard({super.key, required this.title, required this.plans});
+
+  // Function to launch the phone dialer
+  Future<void> _makeCall() async {
+    const phoneNumber = 'tel:+1234567890'; // Replace with the phone number you want to dial
+    final Uri phoneUri = Uri.parse(phoneNumber);
+
+    if (await canLaunch(phoneUri.toString())) {
+      await launch(phoneUri.toString());
+    } else {
+      throw 'Could not launch $phoneNumber';
+    }
+  }
+
+  // Action button widget
+
 
   @override
   Widget build(BuildContext context) {
@@ -56,10 +72,6 @@ class SetupCard extends StatelessWidget {
           const SizedBox(height: 20),
           Row(
             children: [
-              _actionButton("Book Us"),
-              const SizedBox(
-                width: 20,
-              ),
               _actionButton("Inquiry"),
             ],
           )
@@ -70,18 +82,21 @@ class SetupCard extends StatelessWidget {
 
   Widget _actionButton(String label) {
     return Expanded(
-      child: Container(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        decoration: BoxDecoration(
-          color: const Color(0xFFFF5F5F),
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Center(
-          child: Text(
-            label,
-            style: const TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
+      child: GestureDetector(
+        onTap: _makeCall,  // Trigger the call function when the button is tapped
+        child: Container(
+          padding: const EdgeInsets.symmetric(vertical: 12),
+          decoration: BoxDecoration(
+            color: const Color(0xFFFF5F5F),
+            borderRadius: BorderRadius.circular(8),
+          ),
+          child: Center(
+            child: Text(
+              label,
+              style: const TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+              ),
             ),
           ),
         ),

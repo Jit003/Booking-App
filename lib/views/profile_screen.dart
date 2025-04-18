@@ -1,7 +1,8 @@
+import 'package:bhadranee_employee/controller/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import '../controller/email_login_controller.dart';
-import '../controller/image_controller.dart';
 import '../controller/register_controller.dart';
 import '../constant/app_color.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -9,7 +10,7 @@ import 'package:url_launcher/url_launcher.dart';
 class ProfileScreen extends StatelessWidget {
   ProfileScreen({super.key});
 
-  final emailLoginController = Get.find<EmailLoginController>();
+  final EmailLoginController emailLoginController = Get.put(EmailLoginController());
   final registerController = Get.find<RegisterController>();
 
 
@@ -23,13 +24,9 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String name = registerController.nameController.text.isNotEmpty
-        ? registerController.nameController.text
-        : "UserName";
-
-    final String email = emailLoginController.emailController.text.isNotEmpty
-        ? emailLoginController.emailController.text
-        : "user@example.com";
+    final box = GetStorage();
+    final userName = box.read('user_name') ?? '';
+    final email = box.read('user_email') ?? 'email';
 
     return Scaffold(
       backgroundColor: AppColor.bgColor,
@@ -62,7 +59,7 @@ class ProfileScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 12),
                 Text(
-                  name,
+                  userName,
                   style: const TextStyle(
                       color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold),
                 ),
@@ -80,20 +77,20 @@ class ProfileScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 _buildOption(Icons.info, "About Us", () {
-                  _launchURL("https://your-website.com/about");
+                  _launchURL("https://bhadraneemusic.com/aboutus");
                 }),
                 _buildOption(Icons.privacy_tip, "Privacy Policy", () {
-                  _launchURL("https://your-website.com/privacy-policy");
+                  _launchURL("https://bhadraneemusic.com/");
                 }),
                 _buildOption(Icons.policy, "Refund Policy", () {
-                  _launchURL("https://your-website.com/refund-policy");
+                  _launchURL("https://bhadraneemusic.com/aboutus");
                 }),
                 _buildOption(Icons.star_rate, "Rate Us", () {
-                  _launchURL("https://play.google.com/store/apps/details?id=your.app.id");
+                  _launchURL("https://bhadraneemusic.com/aboutus");
                 }),
                 const Divider(color: Colors.white30),
                 _buildOption(Icons.logout, "Logout", () {
-                  Get.back(); // or any logout logic
+                  logoutUser();
                 }),
               ],
             ),

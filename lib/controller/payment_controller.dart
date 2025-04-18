@@ -1,10 +1,14 @@
 import 'package:bhadranee_employee/controller/booking_controller.dart';
 import 'package:bhadranee_employee/controller/form_controller.dart';
 import 'package:bhadranee_employee/controller/time_controller.dart';
+import 'package:bhadranee_employee/routes/app_routes.dart';
+import 'package:bhadranee_employee/views/payment_success_screen.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 import '../api/api_services.dart';
+import '../api/token_helper.dart';
 import 'login_controller.dart';
 
 class PaymentController extends GetxController {
@@ -14,6 +18,7 @@ class PaymentController extends GetxController {
   final AuthController authController = Get.put(AuthController());
   final TimeController timeController = Get.put(TimeController());
   final storage = GetStorage();
+  var isLoading = false.obs;
 
   @override
   void onInit() {
@@ -34,10 +39,11 @@ class PaymentController extends GetxController {
     required String vehicleType,
   }) async {
     try {
-      String? token = storage.read('token');
+      isLoading(true);
+      final token = await TokenHelper.getToken();
+
       if (token == null) {
-        print("❌ No token found");
-        return;
+        throw Exception("No token available");
       }
 
       // 🔁 Get order details from backend
@@ -80,6 +86,8 @@ class PaymentController extends GetxController {
       _razorpay.open(options);
     } catch (e) {
       print("❌ Payment initiation error: $e");
+    } finally {
+      isLoading(false);
     }
   }
 
@@ -90,7 +98,7 @@ class PaymentController extends GetxController {
     print("Signature id: ${response.signature}");
 
     var phone = authController.phoneController.text.trim();
-    if (phone.isEmpty ) {
+    if (phone.isEmpty) {
       print("❌ Missing phone or name");
       return;
     }
@@ -98,12 +106,12 @@ class PaymentController extends GetxController {
       phone = "+91$phone";
     }
 
+    final tokens = await TokenHelper.getToken();
 
-    String? token = storage.read('token');
-    if (token == null) {
-      print("❌ No token found in this");
-      return;
+    if (tokens == null) {
+      throw Exception("No token available ");
     }
+   Get.toNamed(AppRoutes.paymentProcessingScreen,);
     final bookingData = {
       "phone_number": phone,
       "name": bookingFormController.fullNameController.text.trim(),
@@ -111,32 +119,52 @@ class PaymentController extends GetxController {
       "time_slot": bookingFormController.slotController.text.trim(),
       "start_time": timeController.startTimeController.text.trim(),
       "end_time": timeController.endTimeController.text.trim(),
-      "vehicle_type": bookingFormController.vehicleController.text.trim(),
+      "vehicle_variants": bookingFormController.vehicleController.text.trim(),
       "starting_place": bookingFormController.startPlaceController.text.trim(),
       "ending_place": bookingFormController.endPlaceController.text.trim(),
       "address": bookingFormController.addressController.text.trim(),
       "description": bookingFormController.occasionController.text.trim(),
-      "amount": double.tryParse(bookingFormController.bookingAmountController.text.trim().replaceAll(RegExp(r'[^\d.]'), '')) ?? 0,
-      "full_amount": double.tryParse(bookingFormController.priceController.text.trim().replaceAll(RegExp(r'[^\d.]'), '')) ?? 0,
+      "amount": double.tryParse(bookingFormController
+              .bookingAmountController.text
+              .trim()
+              .replaceAll(RegExp(r'[^\d.]'), '')) ??
+          0,
+      "full_amount": double.tryParse(bookingFormController.priceController.text
+              .trim()
+              .replaceAll(RegExp(r'[^\d.]'), '')) ??
+          0,
       "advance_amount": 1,
       "pending_amount": 2,
+      "vehicle_type": bookingFormController.selectedVehicleType.trim(),
     };
 
     final isVerified = await ApiService().verifyPayment(
         paymentId: response.paymentId!,
         orderId: response.orderId!,
         signature: response.signature!,
-        bookingData: bookingData);
+        bookingData: bookingData,
+        token: tokens);
 
     if (isVerified) {
-      Get.snackbar("Success", "Payment verified and booking confirmed");
+      Get.back();
+      Get.snackbar(
+          backgroundColor: Colors.white,
+          "Success",
+          "Payment verified and  booking confirmed");
+      Get.toNamed(AppRoutes.paymentSuccessScreen);
     } else {
-      Get.snackbar("Error", "Payment verification failed");
+      Get.back();
+      Get.snackbar(
+          backgroundColor: Colors.white,
+          "Error",
+          "Payment verification failed ");
+
     }
   }
 
   void _handlePaymentError(PaymentFailureResponse response) {
     print("Payment Error: ${response.message}");
+    Get.snackbar("Payment Error","${response.message}" );
   }
 
   void _handleExternalWallet(ExternalWalletResponse response) {
