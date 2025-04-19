@@ -51,6 +51,7 @@ dependencies:
   path_provider: ^2.1.5
   permission_handler: 11.0.1
   open_file: ^3.5.10
+  image_picker: ^1.1.2
 
 
 dev_dependencies:

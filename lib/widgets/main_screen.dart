@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bhadranee_employee/controller/email_login_controller.dart';
 import 'package:bhadranee_employee/controller/register_controller.dart';
 import 'package:bhadranee_employee/routes/app_routes.dart';
@@ -10,6 +12,7 @@ import '../constant/app_color.dart';
 import '../controller/bottom_nav_controller.dart';
 import 'package:bhadranee_employee/views/dashboard_screen.dart';
 
+import '../controller/image_controller.dart';
 import '../views/bookings_list_screen.dart';
 import 'bottom_nav_bar.dart';
 
@@ -19,6 +22,8 @@ class MainScaffold extends StatelessWidget {
   final BottomNavController controller = Get.put(BottomNavController());
   final RegisterController registerController = Get.put(RegisterController());
   final EmailLoginController emailLoginController = Get.put(EmailLoginController());
+  final ImageController imageController = Get.put(ImageController());
+
 
 
   final List<Widget> _pages = [
@@ -42,30 +47,43 @@ class MainScaffold extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: AppColor.bgColor,
         centerTitle: false,
-        title:  Builder(
-          builder: ( context)=>
-           ListTile(
-            leading:  GestureDetector(
-              child: CircleAvatar(
+        title:  ListTile(
+          leading: GestureDetector(
+            onTap: () {
+              imageController.pickImage(); // Opens camera or gallery
+            },
+            child: Obx(() {
+              final email = emailLoginController.emailController.text;
+              final imagePath = imageController.profileImagePath.value;
+
+              return CircleAvatar(
                 backgroundColor: AppColor.btnColor,
-                child: Text(emailLoginController.emailController.text.isNotEmpty ?
-                emailLoginController.emailController.text[0].toUpperCase():'?',
-                  style: const TextStyle(color: Colors.white),
-                ),
-              ),
-            ),
-            title: Text(
-              'Welcome back ,${userName}',
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-            ),
-            subtitle: Text(
-              '$email',
-              style: const TextStyle(
-                  color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-            ),
+                backgroundImage:
+                imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
+                child: imagePath.isEmpty
+                    ? Text(
+                  email.isNotEmpty ? email[0].toUpperCase() : '?',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 24,
+                    fontWeight: FontWeight.bold,
+                  ),
+                )
+                    : null,
+              );
+            }),
           ),
-        ),
+         title: Text(
+           'Welcome back ,${userName}',
+           style: const TextStyle(
+               color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+         ),
+         subtitle: Text(
+           '$email',
+           style: const TextStyle(
+               color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+         ),
+                  ),
         actions: [
           IconButton(onPressed: () {
             Get.toNamed(AppRoutes.notificationScreen);

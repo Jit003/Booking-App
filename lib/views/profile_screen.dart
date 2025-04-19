@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:bhadranee_employee/controller/image_controller.dart';
 import 'package:bhadranee_employee/controller/logout_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +15,7 @@ class ProfileScreen extends StatelessWidget {
 
   final EmailLoginController emailLoginController = Get.put(EmailLoginController());
   final registerController = Get.find<RegisterController>();
+  final ImageController controller = Get.put(ImageController());
 
 
   Future<void> _launchURL(String url) async {
@@ -45,18 +49,29 @@ class ProfileScreen extends StatelessWidget {
             ),
             child: Column(
               children: [
-                CircleAvatar(
-                  radius: 40,
-                  backgroundColor: Colors.white,
-                  child: Text(
-                    email.isNotEmpty ? email[0].toUpperCase() : '?',
-                    style: const TextStyle(
-                      color: Colors.deepOrange,
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
+
+                Obx((){
+                  return  GestureDetector(
+                    onTap: () => controller.pickImage(),
+                    child: CircleAvatar(
+                      radius: 40,
+                      backgroundColor: Colors.white,
+                      backgroundImage: controller.profileImagePath.isNotEmpty
+                          ? FileImage(File(controller.profileImagePath.value))
+                          : null,
+                      child: controller.profileImagePath.isEmpty
+                          ? const Text(
+                        'A', // fallback initial
+                        style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
+                          : null,
                     ),
-                  ),
-                ),
+                  );
+                }),
                 const SizedBox(height: 12),
                 Text(
                   userName,

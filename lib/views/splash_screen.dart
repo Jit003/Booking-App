@@ -2,6 +2,7 @@ import 'package:bhadranee_employee/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import '../api/token_helper.dart';
 import '../constant/app_color.dart';
 import '../constant/app_images.dart';
 
@@ -14,17 +15,19 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   @override
+  @override
   void initState() {
     super.initState();
 
-    Future.delayed(const Duration(seconds: 3), () {
-      final box = GetStorage();
-      final isLoggedIn = box.hasData('token');
+    Future.delayed(const Duration(seconds: 3), () async {
+      final token = await TokenHelper.getToken(); // Check both custom token and Firebase token
 
-      if (isLoggedIn) {
-        Get.offAllNamed(AppRoutes.mainScreen); // Dashboard
+      if (token != null && token.isNotEmpty) {
+        // Token exists → User is logged in
+        Get.offAllNamed(AppRoutes.mainScreen);
       } else {
-        Get.offAllNamed(AppRoutes.loginScreen); // Login
+        // No token → Show login screen
+        Get.offAllNamed(AppRoutes.loginScreen);
       }
     });
   }
