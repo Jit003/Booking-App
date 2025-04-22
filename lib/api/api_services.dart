@@ -1,23 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 import 'package:bhadranee_employee/api/model/vehicle_list_model.dart';
+import 'package:bhadranee_employee/api/model/booking_list_customer_model.dart';
 import 'package:bhadranee_employee/api/token_helper.dart';
 import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'model/booking_date_model.dart';
 import 'package:get_storage/get_storage.dart';
-
-import 'model/booking_list_customer_model.dart';
-import 'model/storage_permission.dart';
 import 'model/vehicle_list_category_model.dart';
 
 class ApiService {
   static const String registerUrl = "http://bhadraneemusic.com/api/register";
-  static const String url =
+  static const String eicherUrl =
       "http://bhadraneemusic.com/api/eicher-booking-dates";
   static const String baratUrl =
       "http://bhadraneemusic.com/api/barat-booking-dates";
@@ -91,7 +88,7 @@ class ApiService {
     // // Get Firebase ID Token
     // String? idToken = await user?.getIdToken(true);
     // await storage.write('token', idToken);
-    final response = await http.get(Uri.parse(url), headers: {
+    final response = await http.get(Uri.parse(eicherUrl), headers: {
       "Accept": "application/json",
       "Content-Type": "application/json", // Important for JSON APIs
       "cookie": "humans_21909=1",
@@ -332,6 +329,29 @@ class ApiService {
     }
   }
 
+  static Future<List<bookingModel>> customerBookingList(String token) async {
+    const String baseUrl = 'http://bhadraneemusic.com/api/customerbookinglist';
+    final uri = Uri.parse(baseUrl);
+
+    final response = await http.post(
+      uri,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final jsonData = json.decode(response.body);
+      print('📦 Customer Booking Response: $jsonData');
+
+      final bookingModelObj = BookingModel.fromJson(jsonData);
+
+      return bookingModelObj.data ?? [];
+    } else {
+      throw Exception('❌ Failed to load customer bookings');
+    }
+  }
+
   static Future<http.Response?> fetchNotifications(
       {required String token}) async {
     try {
@@ -349,27 +369,8 @@ class ApiService {
       print('Notification API Error: $e');
       return null;
     }
+
   }
-
-  static Future<List<BookingModel>> customerBookingList(String token) async {
-    const String baseUrl = 'http://bhadraneemusic.com/api/customerbookinglist';
-    final uri = Uri.parse(baseUrl);
-    final response = await http.post(
-      uri,
-      headers: {
-        'Authorization': 'Bearer $token',
-      },
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      final List list = data['data'];
-      return list.map((e) => BookingModel.fromJson(e)).toList();
-    } else {
-      throw Exception('Failed to load bookings');
-    }
-  }
-
   static Future<String?> downloadPdf(String url, String fileName) async {
     try {
       Directory? directory;
@@ -396,5 +397,41 @@ class ApiService {
       return null;
     }
   }
+
+
+  static Future<http.Response?> checkIfEmailExists(String email) async {
+    try {
+      var uri = Uri.parse(registerUrl);
+      var request = http.MultipartRequest('POST', uri);
+
+      request.fields['email'] = email;
+
+      http.StreamedResponse streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      return response;
+    } catch (e) {
+      print('Email Check Error: $e');
+      return null;
+    }
+  }
+
+  static Future<http.Response?> checkIfPhoneExists(String phone) async {
+    try {
+      var uri = Uri.parse(registerUrl);
+      var request = http.MultipartRequest('POST', uri);
+
+      request.fields['phone_number'] = phone;
+
+      http.StreamedResponse streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      return response;
+    } catch (e) {
+      print('Phone Check Error: $e');
+      return null;
+    }
+  }
+
 
 }

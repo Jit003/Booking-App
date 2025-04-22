@@ -22,7 +22,7 @@ void logoutUser() async {
     print("Cleared local storage");
 
     // ✅ Navigate to login screen
-    Get.offAllNamed(AppRoutes.loginScreen); // Replace with your actual login route
+    Get.offAllNamed(AppRoutes.loginScreen);
 
     Get.snackbar(
       "Logout Successful",

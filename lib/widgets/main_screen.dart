@@ -21,15 +21,13 @@ class MainScaffold extends StatelessWidget {
 
   final BottomNavController controller = Get.put(BottomNavController());
   final RegisterController registerController = Get.put(RegisterController());
-  final EmailLoginController emailLoginController = Get.put(EmailLoginController());
+  final EmailLoginController emailLoginController =
+      Get.put(EmailLoginController());
   final ImageController imageController = Get.put(ImageController());
-
-
 
   final List<Widget> _pages = [
     DashboardScreen(),
     CustomerBookingScreen(),
-
     AllVehicleListScreen(),
     ProfileScreen()
   ];
@@ -47,7 +45,7 @@ class MainScaffold extends StatelessWidget {
         iconTheme: const IconThemeData(color: Colors.white),
         backgroundColor: AppColor.bgColor,
         centerTitle: false,
-        title:  ListTile(
+        title: ListTile(
           leading: GestureDetector(
             onTap: () {
               imageController.pickImage(); // Opens camera or gallery
@@ -59,35 +57,37 @@ class MainScaffold extends StatelessWidget {
               return CircleAvatar(
                 backgroundColor: AppColor.btnColor,
                 backgroundImage:
-                imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
+                    imagePath.isNotEmpty ? FileImage(File(imagePath)) : null,
                 child: imagePath.isEmpty
                     ? Text(
-                  email.isNotEmpty ? email[0].toUpperCase() : '?',
-                  style: const TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
-                )
+                        email.isNotEmpty ? email[0].toUpperCase() : '?',
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
                     : null,
               );
             }),
           ),
-         title: Text(
-           'Welcome back ,${userName}',
-           style: const TextStyle(
-               color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-         ),
-         subtitle: Text(
-           '$email',
-           style: const TextStyle(
-               color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-         ),
-                  ),
+          title: Text(
+            'Welcome back ,${userName}',
+            style: const TextStyle(
+                color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+          subtitle: Text(
+            '$email',
+            style: const TextStyle(
+                color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+          ),
+        ),
         actions: [
-          IconButton(onPressed: () {
-            Get.toNamed(AppRoutes.notificationScreen);
-          }, icon: const Icon(Icons.notifications))
+          IconButton(
+              onPressed: () {
+                Get.toNamed(AppRoutes.notificationScreen);
+              },
+              icon: const Icon(Icons.notifications))
         ],
       ),
       body: Obx(() {

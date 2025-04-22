@@ -1,3 +1,4 @@
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../controller/booking_controller.dart';
@@ -32,6 +33,25 @@ class CalendarWidgetforEicher extends StatelessWidget {
               isSameDay(calendarController.selectedDay.value, day),
 
           onDaySelected: (selectedDay, focusedDay) {
+            final today = DateTime.now();
+            // Remove time from both dates for clean date-only comparison
+            final nowDateOnly = DateTime(today.year, today.month, today.day);
+            final selectedDateOnly =
+            DateTime(selectedDay.year, selectedDay.month, selectedDay.day);
+
+            if (selectedDateOnly.isBefore(nowDateOnly)) {
+              // 🔴 User selected a past date
+              Fluttertoast.showToast(
+                  msg: "Unable to chhose this date",
+                  toastLength: Toast.LENGTH_SHORT,
+                  gravity: ToastGravity.SNACKBAR,
+                  timeInSecForIosWeb: 1,
+                  backgroundColor: Colors.red,
+                  textColor: Colors.white,
+                  fontSize: 16.0
+              );
+              return; // ⛔ Stop further logic
+            }
             calendarController.onDaySelected(selectedDay, focusedDay);
 
             String formattedDate =

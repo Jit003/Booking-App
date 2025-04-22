@@ -52,6 +52,7 @@ dependencies:
   permission_handler: 11.0.1
   open_file: ^3.5.10
   image_picker: ^1.1.2
+  fluttertoast: ^8.2.12
 
 
 dev_dependencies:

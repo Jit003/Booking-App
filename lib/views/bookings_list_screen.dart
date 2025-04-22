@@ -3,12 +3,11 @@ import 'package:bhadranee_employee/controller/customer_booking_list_controller.d
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:open_file/open_file.dart';
-import 'package:url_launcher/url_launcher.dart';
-
 import '../api/model/storage_permission.dart';
 
 class CustomerBookingScreen extends StatelessWidget {
-  final CustomerBookingListController controller = Get.put(CustomerBookingListController());
+  final CustomerBookingListController controller =
+      Get.put(CustomerBookingListController());
 
   @override
   Widget build(BuildContext context) {
@@ -20,9 +19,9 @@ class CustomerBookingScreen extends StatelessWidget {
       if (controller.bookingList.isEmpty) {
         return const Center(
             child: Text(
-              "No bookings found.",
-              style: TextStyle(color: Colors.white),
-            ));
+          "No bookings found.",
+          style: TextStyle(color: Colors.white),
+        ));
       }
 
       return ListView.builder(
@@ -32,20 +31,22 @@ class CustomerBookingScreen extends StatelessWidget {
           return Container(
             margin: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: const Color(0xFF1E1E1E),
+              color: Colors.white24,
               borderRadius: BorderRadius.circular(12),
             ),
             child: Column(
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 6),
                   decoration: BoxDecoration(
                     color: Colors.redAccent,
                     borderRadius: BorderRadius.circular(20),
                   ),
                   child: Text(
                     "${booking.date}/Day",
-                    style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+                    style: const TextStyle(
+                        color: Colors.white, fontWeight: FontWeight.bold),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -61,45 +62,37 @@ class CustomerBookingScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 10),
-                 Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    Column(
-                      children: [
-                        Text("Start Date", style: TextStyle(color: Colors.white)),
-                        SizedBox(height: 4),
-                        Text("${booking.startTime}", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Text("End Date", style: TextStyle(color: Colors.white)),
-                        SizedBox(height: 4),
-                        Text("${booking.endTime}", style: TextStyle(color: Colors.white)),
-                      ],
-                    ),
-                  ],
-                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceAround,
                   children: [
                     Column(
                       children: [
-                        Text("Starting Place", style: TextStyle(color: Colors.white)),
-                        SizedBox(height: 4),
-                        Text("${booking.startingPlace}", style: TextStyle(color: Colors.white)),
+                        const Text('Amount',
+                            style: TextStyle(color: Colors.white)),
+                        const SizedBox(height: 4),
+                        Text("${booking.fullAmount}",
+                            style: TextStyle(color: Colors.white)),
                       ],
                     ),
                     Column(
                       children: [
-                        Text("Ending Place", style: TextStyle(color: Colors.white)),
-                        SizedBox(height: 4),
-                        Text("${booking.endingPlace}", style: TextStyle(color: Colors.white)),
+                        const Text("Advance",
+                            style: TextStyle(color: Colors.white)),
+                        const SizedBox(height: 4),
+                        Text("${booking.advanceAmount}",
+                            style: TextStyle(color: Colors.white)),
+                      ],
+                    ),
+                    Column(
+                      children: [
+                        const Text("Due Amount", style: TextStyle(color: Colors.white)),
+                        const SizedBox(height: 4),
+                        Text("${booking.pendingAmount}",
+                            style: const TextStyle(color: Colors.white)),
                       ],
                     ),
                   ],
                 ),
-
                 const SizedBox(height: 10),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -110,11 +103,14 @@ class CustomerBookingScreen extends StatelessWidget {
                           // Request storage permission
                           await requestStoragePermission();
 
-                          final url = booking.invoice; // Replace with the invoice URL
-                          const fileName = 'invoice.pdf'; // Name of the file to download
+                          final url =
+                              booking.invoice; // Replace with the invoice URL
+                          const fileName =
+                              'invoice.pdf'; // Name of the file to download
 
                           // Download the PDF and get the file path
-                          String? filePath = await ApiService.downloadPdf(url, fileName);
+                          String? filePath =
+                              await ApiService.downloadPdf(url!, fileName);
 
                           if (filePath != null) {
                             // Show a notification with the path where the file was saved
@@ -161,7 +157,8 @@ class CustomerBookingScreen extends StatelessWidget {
                         backgroundColor: Colors.redAccent,
                         padding: const EdgeInsets.symmetric(horizontal: 24),
                       ),
-                      child: const Text("Download Invoice", style: TextStyle(color: Colors.white)),
+                      child: const Text("Download Invoice",
+                          style: TextStyle(color: Colors.white)),
                     ),
                   ],
                 ),

@@ -2,6 +2,7 @@ import 'package:bhadranee_employee/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:lottie/lottie.dart';
 import '../api/token_helper.dart';
 import '../constant/app_color.dart';
 import '../constant/app_images.dart';
@@ -20,7 +21,8 @@ class _SplashScreenState extends State<SplashScreen> {
     super.initState();
 
     Future.delayed(const Duration(seconds: 3), () async {
-      final token = await TokenHelper.getToken(); // Check both custom token and Firebase token
+      final token = await TokenHelper
+          .getToken(); // Check both custom token and Firebase token
 
       if (token != null && token.isNotEmpty) {
         // Token exists → User is logged in
@@ -31,7 +33,6 @@ class _SplashScreenState extends State<SplashScreen> {
       }
     });
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +59,11 @@ class _SplashScreenState extends State<SplashScreen> {
 
             // Loading Indicator
             const SizedBox(height: 20),
-            const CircularProgressIndicator()
+            Lottie.asset(
+              'assets/animation/splash_animation.json',
+              height: 150,
+              repeat: true,
+            ),
           ],
         ),
       ),

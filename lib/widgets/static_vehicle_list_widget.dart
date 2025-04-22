@@ -27,7 +27,7 @@ class SetupCard extends StatelessWidget {
     return Container(
       width: double.infinity,
       decoration: BoxDecoration(
-        color: const Color(0xFF2C2C2C),
+        color: Colors.white24,
         borderRadius: BorderRadius.circular(12),
       ),
       child: Column(

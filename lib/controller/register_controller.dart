@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:bhadranee_employee/routes/app_routes.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -29,7 +31,10 @@ class RegisterController extends GetxController {
       box.write('user_email', emailController.text.trim());
       box.write('user_password', passwordController.text);
       box.write('user_name', nameController.text.trim());
-      Get.snackbar(backgroundColor: Colors.white,"Success", "User Registered Successfully");
+      Get.snackbar(
+          backgroundColor: Colors.white,
+          "Success",
+          "User Registered Successfully");
       nameController.clear();
       emailController.clear();
       phoneController.clear();
@@ -37,11 +42,29 @@ class RegisterController extends GetxController {
       Get.toNamed(AppRoutes.loginScreen);
       print(response.body);
     } else {
-      nameController.clear();
-      emailController.clear();
-      phoneController.clear();
-      passwordController.clear();
-      Get.snackbar(backgroundColor: Colors.white,"Error", response?.reasonPhrase ?? "Unknown Error");
+      try {
+        final body = jsonDecode(response!.body);
+        if (body['message'] != null) {
+          final message = body['message'];
+          if (message['email'] != null) {
+            Get.snackbar("Error", message['email'][0],
+                backgroundColor: Colors.white);
+          } else if (message['phone_number'] != null) {
+            Get.snackbar("Error", message['phone_number'][0],
+                backgroundColor: Colors.white);
+          } else {
+            Get.snackbar("Error", "Registration failed",
+                backgroundColor: Colors.white);
+          }
+        } else {
+          Get.snackbar("Error", "Something went wrong",
+              backgroundColor: Colors.white);
+        }
+      } catch (e) {
+        Get.snackbar("Error", "Invalid response format",
+            backgroundColor: Colors.white);
+        print('Parse error: $e');
+      }
     }
   }
 

@@ -29,22 +29,17 @@ class AllVehicleListScreen extends StatelessWidget {
                 SetupCard(
                   title: 'Eicher',
                   plans: [
-                    'Basic - 90000/- (Include GST)',
-                    'Pro - 110000/- (Include GST)',
-                    'Elite Setup - 125000/- (Include GST)',
-                    'Premium - 140000/- (Include GST)',
-                    'Ultimate - 170000/- (Include GST)',
+                    'Normal - 65000/- (Include GST)',
+                    'King - 85000/- (Include GST)',
+                    'Full Setup - 115000/- (Include GST)',
                   ],
                 ),
                 SizedBox(height: 20),
                 SetupCard(
-                  title: 'Bharat on wheels',
+                  title: 'Barat on wheels',
                   plans: [
-                    'Entry - 80000/- (Include GST)',
-                    'Advanced - 105000/- (Include GST)',
-                    'Business Full Setup - 120000/- (Include GST)',
-                    'Enterprise - 150000/- (Include GST)',
-                    'Legend - 180000/- (Include GST)',
+                    'Normal - 70000/- (Include GST)',
+                    'Royal - 170000/- (Include GST)',
                   ],
                 ),
                 SizedBox(height: 40),
