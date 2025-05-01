@@ -36,17 +36,6 @@ class RegisterScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                const SizedBox(height: 8),
-                const Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text("Already Registered ? ",
-                        style: TextStyle(color: Colors.white)),
-                    Text("Login in here.",
-                        style: TextStyle(
-                            color: Colors.red, fontWeight: FontWeight.bold)),
-                  ],
-                ),
                 const SizedBox(height: 30),
                 buildFieldforRegister(
                   "Name",
@@ -69,7 +58,7 @@ class RegisterScreen extends StatelessWidget {
                       if (value == null || value.isEmpty) {
                         return 'Email is required';
                       }
-                      if (!RegExp(r'^[\w-.]+@([\w-]+\.)+[\w]{2,4}')
+                      if (!RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
                           .hasMatch(value)) {
                         return 'Enter a valid email';
                       }
@@ -77,7 +66,7 @@ class RegisterScreen extends StatelessWidget {
                     },
                     onChanged: (value) {
                       if (value.isNotEmpty &&
-                          RegExp(r'^[\w-.]+@([\w-]+\.)+[\w]{2,4}')
+                          RegExp(r"^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$")
                               .hasMatch(value)) {
                         validatorController.checkEmail(value);
                       } else {

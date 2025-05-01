@@ -47,10 +47,10 @@ class RegisterController extends GetxController {
         if (body['message'] != null) {
           final message = body['message'];
           if (message['email'] != null) {
-            Get.snackbar("Error", message['email'][0],
+            Get.snackbar("Try New Email", message['email'][0],
                 backgroundColor: Colors.white);
           } else if (message['phone_number'] != null) {
-            Get.snackbar("Error", message['phone_number'][0],
+            Get.snackbar("Try New Number", message['phone_number'][0],
                 backgroundColor: Colors.white);
           } else {
             Get.snackbar("Error", "Registration failed",

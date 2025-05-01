@@ -7,12 +7,15 @@ Widget buildStyledTextField({
   required String label,
   required TextEditingController controller,
   bool readOnly = false,
+  String? Function(String?)? validator,
 }) {
   return Padding(
     padding: const EdgeInsets.symmetric(vertical: 8.0),
-    child: TextField(
+    child: TextFormField(
       readOnly: readOnly,
       controller: controller,
+      validator: validator,
+      autovalidateMode: AutovalidateMode.onUserInteraction,
       style: const TextStyle(color: Colors.white),
       decoration: InputDecoration(
         hintText: label,

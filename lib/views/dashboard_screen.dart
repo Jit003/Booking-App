@@ -29,17 +29,12 @@ class DashboardScreen extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Column(
               children: [
-                InkWell(
-                  onTap: () {
-                    vehicleController.fetchVehiclesByCategory("Eicher");
-                  },
-                  child: const Text(
-                    'Book Your Date',
-                    style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 20),
-                  ),
+                const Text(
+                  'Book Your Date',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                      fontSize: 20),
                 ),
                 const SizedBox(height: 20),
 

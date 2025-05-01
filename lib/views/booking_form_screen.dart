@@ -19,6 +19,7 @@ class BookingFormScreen extends StatelessWidget {
   final PaymentController paymentController = Get.put(PaymentController());
   final AuthController authController = Get.put(AuthController());
   final TimeController timeController = Get.put(TimeController());
+  final _formKey = GlobalKey<FormState>();
 
 
   BookingFormScreen({
@@ -56,99 +57,130 @@ class BookingFormScreen extends StatelessWidget {
       ),
       body: Padding(
         padding: const EdgeInsets.all(20.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: SingleChildScrollView(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Center(
-                      child: Text(
-                        "Booking Date: ${controller.selectedDate}",
-                        style: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
+        child: Form(
+          key: _formKey,
+          child: Column(
+            children: [
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Center(
+                        child: Text(
+                          "Booking Date: ${controller.selectedDate}",
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.white,
+                          ),
                         ),
                       ),
-                    ),
-                    const SizedBox(height: 20),
-                    buildStyledTextField(
-                        label: "Vehicle",
-                        controller: controller.vehicleController,
-                        readOnly: true),
-                    buildStyledTextField(
-                        label: "Price",
-                        controller: controller.priceController,
-                        readOnly: true),
-                    buildStyledTextField(
-                        label: "Booking Amount",
-                        controller: controller.bookingAmountController),
-                    buildStyledTextField(
-                        label: "Full Name",
-                        controller: controller.fullNameController),
-                    buildStyledTextField(
-                        label: "Phone Number",
-                        controller: authController.phoneController,
-                        readOnly: false),
-                    buildStyledTextField(
-                        label: "Email", controller: controller.emailController),
-                    buildStyledTextField(
-                        label: "Occasion",
-                        controller: controller.occasionController),
-                    buildStyledTextField(
-                        label: "Address",
-                        controller: controller.addressController),
-                    Row(
-                      children: [
-                        Expanded(
-                            child: buildTimePickerField("Start Time", true)),
-                        const SizedBox(width: 12),
-                        Expanded(
-                            child: buildTimePickerField("End Time", false)),
-                      ],
-                    ),
-                    Row(
-                      children: [
-                        Expanded(
-                          child: buildStyledTextField(
-                              label: "Starting Place ",
-                              controller: controller.startPlaceController),
-                        ),
-                        const SizedBox(width: 12),
-                        Expanded(
-                          child: buildStyledTextField(
-                              label: "Ending Place",
-                              controller: controller.endPlaceController),
-                        ),
-                      ],
-                    ),
-                    buildStyledTextField(
-                        label: "Available Slot",
-                        controller: controller.slotController,
-                        readOnly: true),
-                  ],
+                      const SizedBox(height: 20),
+                      buildStyledTextField(
+                          label: "Vehicle",
+                          controller: controller.vehicleController,
+                          readOnly: true),
+                      buildStyledTextField(
+                          label: "Price",
+                          controller: controller.priceController,
+                          readOnly: true),
+                      buildStyledTextField(
+                          label: "Booking Amount",
+                          controller: controller.bookingAmountController, validator: (value) {
+                        if (value == null || value.isEmpty) return 'Booking Amount is required';
+                        return null;
+                      },),
+                      buildStyledTextField(
+                          label: "Full Name",
+                          controller: controller.fullNameController,
+                        validator: (value) {
+                          if (value == null || value.isEmpty) return 'Name is required';
+                          return null;
+                        },
+                      ),
+                      buildStyledTextField(
+                          label: "Phone Number",
+                          controller: authController.phoneController,
+                          readOnly: false,validator: (value) {
+                        if (value == null || value.isEmpty) return 'Phone Number is required';
+                        return null;
+                      },),
+                      buildStyledTextField(
+                          label: "Email", controller: controller.emailController,validator: (value) {
+                        if (value == null || value.isEmpty) return 'Email is required';
+                        return null;
+                      },),
+                      buildStyledTextField(
+                          label: "Occasion",
+                          controller: controller.occasionController,validator: (value) {
+                        if (value == null || value.isEmpty) return 'Occasion is required';
+                        return null;
+                      },),
+                      buildStyledTextField(
+                          label: "Address",
+                          controller: controller.addressController,validator: (value) {
+                        if (value == null || value.isEmpty) return 'Address is required';
+                        return null;
+                      },),
+                      Row(
+                        children: [
+                          Expanded(
+                              child: buildTimePickerField("Start Time", true)),
+                          const SizedBox(width: 12),
+                          Expanded(
+                              child: buildTimePickerField("End Time", false)),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: buildStyledTextField(
+                                label: "Starting Place ",
+                                controller: controller.startPlaceController,validator: (value) {
+                              if (value == null || value.isEmpty) return 'Starting Place is required';
+                              return null;
+                            },),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: buildStyledTextField(
+                                label: "Ending Place",
+                                controller: controller.endPlaceController,validator: (value) {
+                              if (value == null || value.isEmpty) return 'Ending Place is required';
+                              return null;
+                            },),
+                          ),
+                        ],
+                      ),
+                      buildStyledTextField(
+                          label: "Available Slot",
+                          controller: controller.slotController,
+                          readOnly: true),
+                    ],
+                  ),
                 ),
               ),
-            ),
-            const SizedBox(height: 20),
-            Obx(()=>customButton(
-              isLoading: paymentController.isLoading.value,
-              onPressed: () {
-                paymentController.initiatePayment(
-                  name: controller.fullNameController.text,
-                  email: controller.emailController.text,
-                  contact: controller.phoneController.text,
-                  address: controller.addressController.text,
-                  fullAmount: controller.bookingAmountController.text,
-                  amount: controller.bookingAmountController.text,
-                  vehicleType: controller.vehicleController.text,
-                );
-              },
-              text: 'Pay Booking Amount',
-            ),)
-          ],
+              const SizedBox(height: 20),
+              Obx(()=>customButton(
+                isLoading: paymentController.isLoading.value,
+                onPressed: () {
+                if(_formKey.currentState!.validate()){
+                  paymentController.initiatePayment(
+                    name: controller.fullNameController.text,
+                    email: controller.emailController.text,
+                    contact: controller.phoneController.text,
+                    address: controller.addressController.text,
+                    fullAmount: controller.bookingAmountController.text,
+                    amount: controller.bookingAmountController.text,
+                    vehicleType: controller.vehicleController.text,
+                  );
+                }
+                },
+                text: 'Pay Booking Amount',
+              ),)
+            ],
+          ),
         ),
       ),
     );

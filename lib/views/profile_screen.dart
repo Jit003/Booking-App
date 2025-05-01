@@ -60,11 +60,11 @@ class ProfileScreen extends StatelessWidget {
                           ? FileImage(File(controller.profileImagePath.value))
                           : null,
                       child: controller.profileImagePath.isEmpty
-                          ? const Text(
-                        'A', // fallback initial
-                        style: TextStyle(
+                          ? Text(
+                        email.isNotEmpty ? email[0].toUpperCase() : '?',
+                        style: const TextStyle(
                           color: Colors.deepOrange,
-                          fontSize: 32,
+                          fontSize: 34,
                           fontWeight: FontWeight.bold,
                         ),
                       )
